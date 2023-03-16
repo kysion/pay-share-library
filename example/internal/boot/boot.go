@@ -2,6 +2,7 @@ package boot
 
 import (
     "context"
+    _ "github.com/SupenBysz/gf-admin-community"
     "github.com/SupenBysz/gf-admin-community/sys_controller"
     "github.com/SupenBysz/gf-admin-community/sys_service"
     "github.com/gogf/gf/v2/frame/g"
@@ -55,6 +56,10 @@ var (
 
                 // 订单模块
                 group.Group("/order", func(group *ghttp.RouterGroup) { group.Bind(order.Order) })
+
+                // 账单模块
+
+                //
 
             })
 
