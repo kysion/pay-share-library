@@ -45,10 +45,13 @@ func (s *sOrder) InstallHook(actionType enum.OrderStateType, hookFunc hook.Order
 
 // CreateOrder 创建订单
 func (s *sOrder) CreateOrder(ctx context.Context, info *model.Order) (*model.OrderRes, error) {
+	if info.Id == 0 {
+		info.Id = idgen.NextId()
+	}
+
 	data := do.Order{}
 
 	gconv.Struct(info, &data)
-	data.Id = idgen.NextId()
 	// 订单状态默认是待支付
 	if info.State == 0 {
 		data.State = 1
