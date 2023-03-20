@@ -114,15 +114,13 @@ func (s *sOrder) QueryOrderList(ctx context.Context, info *base_model.SearchPara
 	return (*model.OrderListRes)(result), err
 }
 
-// QueryOrderByAMonth 查询最近一个月的订单
-func (s *sOrder) QueryOrderByAMonth(ctx context.Context) (*model.OrderListRes, error) {
+// QueryOrderByOneMonth 查询最近30天的订单
+func (s *sOrder) QueryOrderByOneMonth(ctx context.Context) (*model.OrderListRes, error) {
 	user := sys_service.SysSession().Get(ctx).JwtClaimsUser
 
 	now := gtime.Now()
 
 	time := now.Add(0 - time.Hour*24*30)
-
-	data := model.OrderListRes{}
 
 	daoWhere := dao.Order.Ctx(ctx).WhereGT(dao.Order.Columns().CreatedAt, time)
 
@@ -130,13 +128,36 @@ func (s *sOrder) QueryOrderByAMonth(ctx context.Context) (*model.OrderListRes, e
 		daoWhere = daoWhere.Where(do.Order{UnionMainId: user.UnionMainId})
 	}
 
-	err := daoWhere.Scan(&data)
+	data, err := daoctl.Query[model.Order](daoWhere, nil, false)
 
 	if err != nil {
 		return &model.OrderListRes{}, err
 	}
 
-	return &data, nil
+	return (*model.OrderListRes)(data), nil
+}
+
+// QueryOrderByTwoMonth 查询最近60天个月的订单
+func (s *sOrder) QueryOrderByTwoMonth(ctx context.Context) (*model.OrderListRes, error) {
+	user := sys_service.SysSession().Get(ctx).JwtClaimsUser
+
+	now := gtime.Now()
+
+	time := now.Add(0 - time.Hour*24*60)
+
+	daoWhere := dao.Order.Ctx(ctx).WhereGT(dao.Order.Columns().CreatedAt, time)
+
+	if (user.Type & sys_enum.User.Type.Admin.Code()) != sys_enum.User.Type.Admin.Code() {
+		daoWhere = daoWhere.Where(do.Order{UnionMainId: user.UnionMainId})
+	}
+
+	data, err := daoctl.Query[model.Order](daoWhere, nil, false)
+
+	if err != nil {
+		return &model.OrderListRes{}, err
+	}
+
+	return (*model.OrderListRes)(data), nil
 }
 
 // AuditOrderRefund 审核订单退款   审核触发条件 --- 退款 或者取消支付
