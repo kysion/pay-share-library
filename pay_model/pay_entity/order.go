@@ -27,7 +27,7 @@ type Order struct {
 	TradeAt         *gtime.Time `json:"tradeAt"         description:"交易时间"`
 	State           int         `json:"state"           description:"订单状态：1待支付、2支付中、4已支付、8取消支付、16交易完成、32退款中、64已退款、128支付超时、256已关闭"`
 	AuditState      int         `json:"auditState"      description:"审核状态：0待审核、1已通过、-1不通过"`
-	AuditReplayMsg  string      `json:"auditReplayMsg"  description:"审核回复，审核状态为不通过时必须要有审核回复"`
+	AuditReplyMsg   string      `json:"auditReplyMsg"   description:"审核回复，审核状态为不通过时必须要有审核回复"`
 	AuditAt         *gtime.Time `json:"auditAt"         description:"审核时间"`
 	TradeSourceType int         `json:"tradeSourceType" description:"交易源类型：1支付宝、2微信、4抖音、8银联"`
 	TradeSource     string      `json:"tradeSource"     description:"交易元数据"`

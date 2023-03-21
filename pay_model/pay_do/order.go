@@ -29,7 +29,7 @@ type Order struct {
 	TradeAt         *gtime.Time // 交易时间
 	State           interface{} // 订单状态：1待支付、2支付中、4已支付、8取消支付、16交易完成、32退款中、64已退款、128支付超时、256已关闭
 	AuditState      interface{} // 审核状态：0待审核、1已通过、-1不通过
-	AuditReplayMsg  interface{} // 审核回复，审核状态为不通过时必须要有审核回复
+	AuditReplyMsg   interface{} // 审核回复，审核状态为不通过时必须要有审核回复
 	AuditAt         *gtime.Time // 审核时间
 	TradeSourceType interface{} // 交易源类型：1支付宝、2微信、4抖音、8银联
 	TradeSource     interface{} // 交易元数据

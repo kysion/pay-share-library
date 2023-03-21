@@ -177,16 +177,16 @@ func (s *sOrder) AuditOrderRefund(ctx context.Context, info *model.AuditOrder) (
 	}
 
 	// 审核不通过必须要有原因说明
-	if info.AuditState == enum.Order.AuditState.Reject.Code() && info.AuditReplayMsg == "" {
+	if info.AuditState == enum.Order.AuditState.Reject.Code() && info.AuditReplyMsg == "" {
 		return false, sys_service.SysLogs().ErrorSimple(ctx, nil, "审核不通过必须要有原因说明", dao.Order.Table())
 	}
 
 	// 退款
 	order := do.Order{
-		AuditReplayMsg: info.AuditReplayMsg,
-		AuditAt:        gtime.Now(),
-		AuditState:     info.AuditState,
-		State:          enum.Order.StateType.Refunded.Code(), // 已退款
+		AuditReplyMsg: info.AuditReplyMsg,
+		AuditAt:       gtime.Now(),
+		AuditState:    info.AuditState,
+		State:         enum.Order.StateType.Refunded.Code(), // 已退款
 	}
 
 	// 审核不通过后订单状态还是退款中
