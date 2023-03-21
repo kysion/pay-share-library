@@ -40,7 +40,7 @@ type OrderColumns struct {
 	TradeAt         string // 交易时间
 	State           string // 订单状态：1待支付、2支付中、4已支付、8取消支付、16交易完成、32退款中、64已退款、128支付超时、256已关闭
 	AuditState      string // 审核状态：0待审核、1已通过、-1不通过
-	AuditReplayMsg  string // 审核回复，审核状态为不通过时必须要有审核回复
+	AuditReplyMsg   string // 审核回复，审核状态为不通过时必须要有审核回复
 	AuditAt         string // 审核时间
 	TradeSourceType string // 交易源类型：1支付宝、2微信、4抖音、8银联
 	TradeSource     string // 交易元数据
@@ -67,7 +67,7 @@ var orderColumns = OrderColumns{
 	TradeAt:         "trade_at",
 	State:           "state",
 	AuditState:      "audit_state",
-	AuditReplayMsg:  "audit_replay_msg",
+	AuditReplyMsg:   "audit_reply_msg",
 	AuditAt:         "audit_at",
 	TradeSourceType: "trade_source_type",
 	TradeSource:     "trade_source",
