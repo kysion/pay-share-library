@@ -23,56 +23,60 @@ type OrderDao struct {
 
 // OrderColumns defines and stores column names for table kmk_order.
 type OrderColumns struct {
-	Id              string // id
-	PlatformOrderId string // 第三方平台交易id，例如支付宝、微信...
-	ConsumerId      string // 消费者id
-	InOutType       string // 收支类型：1收入，2支出
-	Amount          string // 交易金额，也就是实际成交金额
-	CouponAmount    string // 优惠减免金额
-	CouponConfig    string // 优惠配置详细数据
-	OrderAmount     string // 订单金额，也就是优惠前的金额
-	BeforeBalance   string // 交易前余额
-	AfterBalance    string // 交易后余额
-	ProductName     string // 产品名称，例如充电等
-	TradeScene      string // 交易场景
-	CreatedAt       string // 订单创建时间
-	RefundAmount    string // 退款金额
-	TradeAt         string // 交易时间
-	State           string // 订单状态：1待支付、2支付中、4已支付、8取消支付、16交易完成、32退款中、64已退款、128支付超时、256已关闭
-	AuditState      string // 审核状态：0待审核、1已通过、-1不通过
-	AuditReplyMsg   string // 审核回复，审核状态为不通过时必须要有审核回复
-	AuditAt         string // 审核时间
-	TradeSourceType string // 交易源类型：1支付宝、2微信、4抖音、8银联
-	TradeSource     string // 交易元数据
-	ProductNumber   string // 产品编号
-	UnionMainId     string // 关联主体ID
+	Id               string // id
+	PlatformOrderId  string // 第三方平台交易id，例如支付宝、微信...
+	ConsumerId       string // 消费者id
+	InOutType        string // 收支类型：1收入，2支出
+	Amount           string // 交易金额，也就是实际成交金额
+	CouponAmount     string // 优惠减免金额
+	CouponConfig     string // 优惠配置详细数据
+	OrderAmount      string // 订单金额，也就是优惠前的金额
+	BeforeBalance    string // 交易前余额
+	AfterBalance     string // 交易后余额
+	ProductName      string // 产品名称，例如充电等
+	TradeScene       string // 交易场景
+	CreatedAt        string // 订单创建时间
+	RefundAmount     string // 退款金额
+	TradeAt          string // 交易时间
+	State            string // 订单状态：1待支付、2支付中、4已支付、8取消支付、16交易完成、32退款中、64已退款、128支付超时、256已关闭
+	AuditState       string // 审核状态：0待审核、1已通过、-1不通过
+	AuditReplyMsg    string // 审核回复，审核状态为不通过时必须要有审核回复
+	AuditAt          string // 审核时间
+	TradeSourceType  string // 交易源类型：1支付宝、2微信、4抖音、8银联
+	TradeSource      string // 交易元数据
+	ProductNumber    string // 产品编号
+	UnionMainId      string // 关联主体ID
+	SubAccountScheme string // 分账方案，默认空，空代表分账结束，无需分账
+	AppId            string // 商家应用appId
 }
 
 // orderColumns holds the columns for table kmk_order.
 var orderColumns = OrderColumns{
-	Id:              "id",
-	PlatformOrderId: "platform_order_id",
-	ConsumerId:      "consumer_id",
-	InOutType:       "in_out_type",
-	Amount:          "amount",
-	CouponAmount:    "coupon_amount",
-	CouponConfig:    "coupon_config",
-	OrderAmount:     "order_amount",
-	BeforeBalance:   "before_balance",
-	AfterBalance:    "after_balance",
-	ProductName:     "product_name",
-	TradeScene:      "trade_scene",
-	CreatedAt:       "created_at",
-	RefundAmount:    "refund_amount",
-	TradeAt:         "trade_at",
-	State:           "state",
-	AuditState:      "audit_state",
-	AuditReplyMsg:   "audit_reply_msg",
-	AuditAt:         "audit_at",
-	TradeSourceType: "trade_source_type",
-	TradeSource:     "trade_source",
-	ProductNumber:   "product_number",
-	UnionMainId:     "union_main_id",
+	Id:               "id",
+	PlatformOrderId:  "platform_order_id",
+	ConsumerId:       "consumer_id",
+	InOutType:        "in_out_type",
+	Amount:           "amount",
+	CouponAmount:     "coupon_amount",
+	CouponConfig:     "coupon_config",
+	OrderAmount:      "order_amount",
+	BeforeBalance:    "before_balance",
+	AfterBalance:     "after_balance",
+	ProductName:      "product_name",
+	TradeScene:       "trade_scene",
+	CreatedAt:        "created_at",
+	RefundAmount:     "refund_amount",
+	TradeAt:          "trade_at",
+	State:            "state",
+	AuditState:       "audit_state",
+	AuditReplyMsg:    "audit_reply_msg",
+	AuditAt:          "audit_at",
+	TradeSourceType:  "trade_source_type",
+	TradeSource:      "trade_source",
+	ProductNumber:    "product_number",
+	UnionMainId:      "union_main_id",
+	SubAccountScheme: "sub_account_scheme",
+	AppId:            "app_id",
 }
 
 // NewOrderDao creates and returns a new DAO object for table data access.

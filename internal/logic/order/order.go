@@ -101,13 +101,13 @@ func (s *sOrder) GetOrderByPlatformOrderId(ctx context.Context, id string) (*mod
 
 // QueryOrderList 查询订单列表
 func (s *sOrder) QueryOrderList(ctx context.Context, info *base_model.SearchParams) (*model.OrderListRes, error) {
-	user := sys_service.SysSession().Get(ctx).JwtClaimsUser
+	//user := sys_service.SysSession().Get(ctx).JwtClaimsUser
 
 	daoWhere := dao.Order.Ctx(ctx)
 
-	if (user.Type & sys_enum.User.Type.Admin.Code()) != sys_enum.User.Type.Admin.Code() {
-		daoWhere = daoWhere.Where(do.Order{UnionMainId: user.UnionMainId})
-	}
+	//if (user.Type & sys_enum.User.Type.Admin.Code()) != sys_enum.User.Type.Admin.Code() {
+	//	daoWhere = daoWhere.Where(do.Order{UnionMainId: user.UnionMainId})
+	//}
 
 	result, err := daoctl.Query[model.Order](daoWhere, info, false)
 
