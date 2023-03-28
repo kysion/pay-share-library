@@ -14,8 +14,6 @@ type Order struct {
 	CouponAmount     int         `json:"couponAmount"    description:"优惠减免金额"`
 	CouponConfig     string      `json:"couponConfig"    description:"优惠配置详细数据"`
 	OrderAmount      int         `json:"orderAmount"     description:"订单金额，也就是优惠前的金额" v:"required#订单金额不能为空"`
-	BeforeBalance    int         `json:"beforeBalance"   description:"交易前余额"`
-	AfterBalance     int         `json:"afterBalance"    description:"交易后余额"`
 	ProductName      string      `json:"productName"     description:"产品名称，例如充电等" v:"required#产品名称不能为空"`
 	TradeScene       string      `json:"tradeScene"      description:"交易场景"`
 	CreatedAt        *gtime.Time `json:"createdAt"       description:"订单创建时间"`
@@ -28,9 +26,11 @@ type Order struct {
 	TradeSourceType  int         `json:"tradeSourceType" description:"交易源类型：1支付宝、2微信、4抖音、8银联"`
 	TradeSource      string      `json:"tradeSource"     description:"交易元数据"`
 	ProductNumber    string      `json:"productNumber"   description:"产品编号"  v:"required#产品编号不能为空"`
-	UnionMainId      int64       `json:"unionMainId"     description:"关联主体ID"`
+	UnionMainId      int64       `json:"unionMainId"      description:"应用关联主体ID"`
 	SubAccountScheme string      `json:"subAccountScheme" description:"分账方案，默认空，空代表分账结束，无需分账"`
-	AppId            string      `json:"appId"           description:"商家应用appId"`
+	AppId            string      `json:"appId"            description:"应用appId"`
+	UnionMainType    int         `json:"unionMainType"    description:"应用关联主体类型, 也就是userType的类型"`
+	MerchantId       int64       `json:"merchantId"       description:"商家id"`
 }
 
 type CreateOrder struct {

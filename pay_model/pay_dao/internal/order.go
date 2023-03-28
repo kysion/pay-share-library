@@ -31,8 +31,6 @@ type OrderColumns struct {
 	CouponAmount     string // 优惠减免金额
 	CouponConfig     string // 优惠配置详细数据
 	OrderAmount      string // 订单金额，也就是优惠前的金额
-	BeforeBalance    string // 交易前余额
-	AfterBalance     string // 交易后余额
 	ProductName      string // 产品名称，例如充电等
 	TradeScene       string // 交易场景
 	CreatedAt        string // 订单创建时间
@@ -45,9 +43,11 @@ type OrderColumns struct {
 	TradeSourceType  string // 交易源类型：1支付宝、2微信、4抖音、8银联
 	TradeSource      string // 交易元数据
 	ProductNumber    string // 产品编号
-	UnionMainId      string // 关联主体ID
+	UnionMainId      string // 应用关联主体ID
 	SubAccountScheme string // 分账方案，默认空，空代表分账结束，无需分账
-	AppId            string // 商家应用appId
+	AppId            string // 应用appId
+	UnionMainType    string // 应用关联主体类型, 也就是userType的类型
+	MerchantId       string // 商家id
 }
 
 // orderColumns holds the columns for table kmk_order.
@@ -60,8 +60,6 @@ var orderColumns = OrderColumns{
 	CouponAmount:     "coupon_amount",
 	CouponConfig:     "coupon_config",
 	OrderAmount:      "order_amount",
-	BeforeBalance:    "before_balance",
-	AfterBalance:     "after_balance",
 	ProductName:      "product_name",
 	TradeScene:       "trade_scene",
 	CreatedAt:        "created_at",
@@ -77,6 +75,8 @@ var orderColumns = OrderColumns{
 	UnionMainId:      "union_main_id",
 	SubAccountScheme: "sub_account_scheme",
 	AppId:            "app_id",
+	UnionMainType:    "union_main_type",
+	MerchantId:       "merchant_id",
 }
 
 // NewOrderDao creates and returns a new DAO object for table data access.

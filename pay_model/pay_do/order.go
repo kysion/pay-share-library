@@ -20,8 +20,6 @@ type Order struct {
 	CouponAmount     interface{} // 优惠减免金额
 	CouponConfig     interface{} // 优惠配置详细数据
 	OrderAmount      interface{} // 订单金额，也就是优惠前的金额
-	BeforeBalance    interface{} // 交易前余额
-	AfterBalance     interface{} // 交易后余额
 	ProductName      interface{} // 产品名称，例如充电等
 	TradeScene       interface{} // 交易场景
 	CreatedAt        *gtime.Time // 订单创建时间
@@ -34,7 +32,9 @@ type Order struct {
 	TradeSourceType  interface{} // 交易源类型：1支付宝、2微信、4抖音、8银联
 	TradeSource      interface{} // 交易元数据
 	ProductNumber    interface{} // 产品编号
-	UnionMainId      interface{} // 关联主体ID
+	UnionMainId      interface{} // 应用关联主体ID
 	SubAccountScheme interface{} // 分账方案，默认空，空代表分账结束，无需分账
-	AppId            interface{} // 商家应用appId
+	AppId            interface{} // 应用appId
+	UnionMainType    interface{} // 应用关联主体类型, 也就是userType的类型
+	MerchantId       interface{} // 商家id
 }
