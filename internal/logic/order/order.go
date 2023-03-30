@@ -65,7 +65,7 @@ func (s *sOrder) CreateOrder(ctx context.Context, info *model.Order) (*model.Ord
     if info.TradeSource == "" {
         data.TradeSource = nil
     }
-	
+
     data.TradeAt = gtime.Now()
 
     affected, err := daoctl.InsertWithError(dao.Order.Ctx(ctx), data)
@@ -90,7 +90,7 @@ func (s *sOrder) GetOrderByPlatformOrderId(ctx context.Context, id string) (*mod
 
     //sys_enum.User.Type.SuperAdmin
     if (user.Type & sys_enum.User.Type.Admin.Code()) != sys_enum.User.Type.Admin.Code() {
-        daoWhere = daoWhere.Where(do.Order{UnionMainId: user.UnionMainId}).WhereOr(do.Order{MerchantId: user.UnionMainId})   // 商户和应用的所属商家需要去看订单
+        daoWhere = daoWhere.Where(do.Order{UnionMainId: user.UnionMainId}).WhereOr(do.Order{MerchantId: user.UnionMainId}) // 商户和应用的所属商家需要去看订单
     }
 
     data, err := daoctl.ScanWithError[model.OrderRes](daoWhere)
@@ -128,7 +128,7 @@ func (s *sOrder) QueryOrderByOneMonth(ctx context.Context) (*model.OrderListRes,
     daoWhere := dao.Order.Ctx(ctx).WhereGT(dao.Order.Columns().CreatedAt, time)
 
     if (user.Type & sys_enum.User.Type.Admin.Code()) != sys_enum.User.Type.Admin.Code() {
-        daoWhere = daoWhere.Where(do.Order{UnionMainId: user.UnionMainId}).WhereOr(do.Order{MerchantId: user.UnionMainId})  // 商户和应用的所属商家需要去看订单
+        daoWhere = daoWhere.Where(do.Order{UnionMainId: user.UnionMainId}).WhereOr(do.Order{MerchantId: user.UnionMainId}) // 商户和应用的所属商家需要去看订单
     }
 
     data, err := daoctl.Query[model.Order](daoWhere, nil, false)
@@ -151,7 +151,7 @@ func (s *sOrder) QueryOrderByTwoMonth(ctx context.Context) (*model.OrderListRes,
     daoWhere := dao.Order.Ctx(ctx).WhereGT(dao.Order.Columns().CreatedAt, time)
 
     if (user.Type & sys_enum.User.Type.Admin.Code()) != sys_enum.User.Type.Admin.Code() {
-        daoWhere = daoWhere.Where(do.Order{UnionMainId: user.UnionMainId}).WhereOr(do.Order{MerchantId: user.UnionMainId})   // 商户和应用的所属商家需要去看订单
+        daoWhere = daoWhere.Where(do.Order{UnionMainId: user.UnionMainId}).WhereOr(do.Order{MerchantId: user.UnionMainId}) // 商户和应用的所属商家需要去看订单
     }
 
     data, err := daoctl.Query[model.Order](daoWhere, nil, false)
@@ -275,19 +275,40 @@ func (s *sOrder) UpdateOrderState(ctx context.Context, id int64, state int) (boo
 }
 
 // GetOrderByProductNumber 根据产品编号查询订单
-func (s *sOrder) GetOrderByProductNumber(ctx context.Context, number string) (*model.OrderListRes, error) {
+func (s *sOrder) GetOrderByProductNumber(ctx context.Context, number string) (*model.OrderRes, error) {
+    user := sys_service.SysSession().Get(ctx).JwtClaimsUser
+
+    // 最新的一条订单记录，并且是已支付的
+    daoWhere := dao.Order.Ctx(ctx).Where(dao.Order.Columns().ProductNumber, number).OrderAsc(dao.Order.Columns().TradeAt).Limit(1)
+
+    if (user.Type & sys_enum.User.Type.Admin.Code()) != sys_enum.User.Type.Admin.Code() {
+        daoWhere = daoWhere.Where(do.Order{UnionMainId: user.UnionMainId}).WhereOr(do.Order{MerchantId: user.UnionMainId}) // 商户和应用的所属商家需要去看订单
+    }
+
+    ret := model.OrderRes{}
+    err := daoWhere.Scan(&ret)
+
+    if err != nil {
+        return nil, sys_service.SysLogs().ErrorSimple(ctx, err, "根据产品编号查询订单失败，请检查", dao.Order.Table())
+    }
+
+    return &ret, nil
+}
+
+// QueryOrderByProductNumber 根据产品编号查询订单|列表
+func (s *sOrder) QueryOrderByProductNumber(ctx context.Context, number string) (*model.OrderListRes, error) {
     user := sys_service.SysSession().Get(ctx).JwtClaimsUser
 
     daoWhere := dao.Order.Ctx(ctx).Where(dao.Order.Columns().ProductNumber, number)
 
     if (user.Type & sys_enum.User.Type.Admin.Code()) != sys_enum.User.Type.Admin.Code() {
-        daoWhere = daoWhere.Where(do.Order{UnionMainId: user.UnionMainId}).WhereOr(do.Order{MerchantId: user.UnionMainId})  // 商户和应用的所属商家需要去看订单
+        daoWhere = daoWhere.Where(do.Order{UnionMainId: user.UnionMainId}).WhereOr(do.Order{MerchantId: user.UnionMainId}) // 商户和应用的所属商家需要去看订单
     }
 
     data, err := daoctl.Query[model.Order](daoWhere, nil, false)
 
     if err != nil {
-        return nil, sys_service.SysLogs().ErrorSimple(ctx, err, "根据产品编号查询订单失败，请检查", dao.Order.Table())
+        return nil, sys_service.SysLogs().ErrorSimple(ctx, err, "根据产品编号查询订单列表失败，请检查", dao.Order.Table())
     }
 
     return (*model.OrderListRes)(data), nil

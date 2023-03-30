@@ -40,8 +40,8 @@ type UpdateOrderStateReq struct {
 	State  int   `json:"state" dc:"订单状态：1待支付、2支付中、4已支付、8取消支付、16交易完成、32退款中、64已退款、128支付超时、256已关闭"`
 }
 
-type GetOrderByProductNumberReq struct {
-	g.Meta `path:"/getOrderByProductNumber" method:"post" summary:"根据产品编号查询订单|信息" tags:"订单"`
+type QueryOrderByProductNumberReq struct {
+	g.Meta `path:"/queryOrderByProductNumber" method:"post" summary:"根据产品编号查询订单|列表" tags:"订单"`
 	Number string `json:"number" dc:"产品编号就是设备编号" v:"required#产品编号不能为空"`
 }
 
