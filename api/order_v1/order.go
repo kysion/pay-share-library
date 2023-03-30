@@ -17,16 +17,16 @@ type GetOrderByPlatformOrderIdReq struct {
 }
 
 type QueryOrderListReq struct {
-	g.Meta `path:"/queryOrderList" method:"post" summary:"查询订单列表|列表" tags:"订单"`
+	g.Meta `path:"/queryOrderList" method:"post" summary:"查询订单|列表" tags:"订单"`
 	base_model.SearchParams
 }
 
 type QueryOrderByOneMonthReq struct {
-	g.Meta `path:"/queryOrderByOneMonth" method:"post" summary:"查询最近一个月的订单|信息" tags:"订单"`
+	g.Meta `path:"/queryOrderByOneMonth" method:"post" summary:"查询最近一个月的订单|列表" tags:"订单"`
 }
 
 type QueryOrderByTowMonthReq struct {
-	g.Meta `path:"/queryOrderByTowMonth" method:"post" summary:"查询最近两个月的订单|信息" tags:"订单"`
+	g.Meta `path:"/queryOrderByTowMonth" method:"post" summary:"查询最近两个月的订单|列表" tags:"订单"`
 }
 
 type AuditOrderRefundReq struct {
@@ -42,15 +42,15 @@ type UpdateOrderStateReq struct {
 
 type GetOrderByProductNumberReq struct {
 	g.Meta `path:"/getOrderByProductNumber" method:"post" summary:"根据产品编号查询订单|信息" tags:"订单"`
-	Number string `json:"number" dc:"产品编号" v:"required#产品编号不能为空"`
+	Number string `json:"number" dc:"产品编号就是设备编号" v:"required#产品编号不能为空"`
 }
 
 type GetOrderByUnionMainIdReq struct {
-	g.Meta      `path:"/getOrderByUnionMainId" method:"post" summary:"根据主体查询订单列表|信息" tags:"订单"`
-	UnionMainId int64 `json:"union_main_id"              description:"主体ID" v:"required#主体id不能为空"`
+	g.Meta      `path:"/getOrderByUnionMainId" method:"post" summary:"根据主体查询订单|列表" tags:"订单"`
+	UnionMainId int64 `json:"union_main_id"              description:"主体ID，一般是app应用关联的主体" v:"required#主体id不能为空"`
 }
 
 type GetOrderByConsumerIdReq struct {
-	g.Meta `path:"/getOrderByConsumerId" method:"post" summary:"根据消费者查询订单列表|信息" tags:"订单"`
+	g.Meta `path:"/getOrderByConsumerId" method:"post" summary:"根据消费者查询订单|列表" tags:"订单"`
 	Id     string `json:"id" dc:"消费者Id" v:"required#消费者id不能为空" `
 }
