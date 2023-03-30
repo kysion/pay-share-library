@@ -26,7 +26,8 @@ type (
 		AuditOrderRefund(ctx context.Context, info *model.AuditOrder) (bool, error)
 		UpdateOrderTradeSource(ctx context.Context, info *model.UpdateOrderTradeInfo) (bool, error)
 		UpdateOrderState(ctx context.Context, id int64, state int) (bool, error)
-		GetOrderByProductNumber(ctx context.Context, number string) (*model.OrderListRes, error)
+		GetOrderByProductNumber(ctx context.Context, number string) (*model.OrderRes, error)
+		QueryOrderByProductNumber(ctx context.Context, number string) (*model.OrderListRes, error)
 		GetOrderByUnionMainId(ctx context.Context, id int64) (*model.OrderListRes, error)
 		GetOrderByConsumerId(ctx context.Context, id string) (*model.OrderListRes, error)
 	}
