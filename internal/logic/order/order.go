@@ -87,9 +87,10 @@ func (s *sOrder) GetOrderByPlatformOrderId(ctx context.Context, id string) (*mod
     user := sys_service.SysSession().Get(ctx).JwtClaimsUser
 
     daoWhere := dao.Order.Ctx(ctx).Where(do.Order{PlatformOrderId: id})
+
     //sys_enum.User.Type.SuperAdmin
     if (user.Type & sys_enum.User.Type.Admin.Code()) != sys_enum.User.Type.Admin.Code() {
-        daoWhere = daoWhere.Where(do.Order{UnionMainId: user.UnionMainId})
+        daoWhere = daoWhere.Where(do.Order{UnionMainId: user.UnionMainId}).WhereOr(do.Order{MerchantId: user.UnionMainId})   // 商户和应用的所属商家需要去看订单
     }
 
     data, err := daoctl.ScanWithError[model.OrderRes](daoWhere)
@@ -127,7 +128,7 @@ func (s *sOrder) QueryOrderByOneMonth(ctx context.Context) (*model.OrderListRes,
     daoWhere := dao.Order.Ctx(ctx).WhereGT(dao.Order.Columns().CreatedAt, time)
 
     if (user.Type & sys_enum.User.Type.Admin.Code()) != sys_enum.User.Type.Admin.Code() {
-        daoWhere = daoWhere.Where(do.Order{UnionMainId: user.UnionMainId})
+        daoWhere = daoWhere.Where(do.Order{UnionMainId: user.UnionMainId}).WhereOr(do.Order{MerchantId: user.UnionMainId})  // 商户和应用的所属商家需要去看订单
     }
 
     data, err := daoctl.Query[model.Order](daoWhere, nil, false)
@@ -150,7 +151,7 @@ func (s *sOrder) QueryOrderByTwoMonth(ctx context.Context) (*model.OrderListRes,
     daoWhere := dao.Order.Ctx(ctx).WhereGT(dao.Order.Columns().CreatedAt, time)
 
     if (user.Type & sys_enum.User.Type.Admin.Code()) != sys_enum.User.Type.Admin.Code() {
-        daoWhere = daoWhere.Where(do.Order{UnionMainId: user.UnionMainId})
+        daoWhere = daoWhere.Where(do.Order{UnionMainId: user.UnionMainId}).WhereOr(do.Order{MerchantId: user.UnionMainId})   // 商户和应用的所属商家需要去看订单
     }
 
     data, err := daoctl.Query[model.Order](daoWhere, nil, false)
@@ -280,7 +281,7 @@ func (s *sOrder) GetOrderByProductNumber(ctx context.Context, number string) (*m
     daoWhere := dao.Order.Ctx(ctx).Where(dao.Order.Columns().ProductNumber, number)
 
     if (user.Type & sys_enum.User.Type.Admin.Code()) != sys_enum.User.Type.Admin.Code() {
-        daoWhere = daoWhere.Where(do.Order{UnionMainId: user.UnionMainId})
+        daoWhere = daoWhere.Where(do.Order{UnionMainId: user.UnionMainId}).WhereOr(do.Order{MerchantId: user.UnionMainId})  // 商户和应用的所属商家需要去看订单
     }
 
     data, err := daoctl.Query[model.Order](daoWhere, nil, false)

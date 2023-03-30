@@ -30,13 +30,13 @@ func (c *cOrder) QueryOrderList(ctx context.Context, req *order_v1.QueryOrderLis
 	return ret, err
 }
 
-func (c *cOrder) QueryOrderByOneMonth(ctx context.Context, req *order_v1.QueryOrderByOneMonthReq) (*model.OrderListRes, error) {
+func (c *cOrder) QueryOrderByOneMonth(ctx context.Context, _ *order_v1.QueryOrderByOneMonthReq) (*model.OrderListRes, error) {
 	ret, err := service.Order().QueryOrderByOneMonth(ctx)
 
 	return ret, err
 }
 
-func (c *cOrder) QueryOrderByTwoMonth(ctx context.Context, req *order_v1.QueryOrderByTowMonthReq) (*model.OrderListRes, error) {
+func (c *cOrder) QueryOrderByTwoMonth(ctx context.Context, _ *order_v1.QueryOrderByTowMonthReq) (*model.OrderListRes, error) {
 	ret, err := service.Order().QueryOrderByTwoMonth(ctx)
 
 	return ret, err
