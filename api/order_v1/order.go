@@ -52,5 +52,5 @@ type GetOrderByUnionMainIdReq struct {
 
 type GetOrderByConsumerIdReq struct {
 	g.Meta `path:"/getOrderByConsumerId" method:"post" summary:"根据消费者查询订单|列表" tags:"订单"`
-	Id     string `json:"id" dc:"消费者Id" v:"required#消费者id不能为空" `
+	Id     int64 `json:"id" dc:"消费者Id" v:"required#消费者id不能为空" `
 }

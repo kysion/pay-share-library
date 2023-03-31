@@ -29,7 +29,7 @@ type (
 		GetOrderByProductNumber(ctx context.Context, number string) (*model.OrderRes, error)
 		QueryOrderByProductNumber(ctx context.Context, number string) (*model.OrderListRes, error)
 		GetOrderByUnionMainId(ctx context.Context, id int64) (*model.OrderListRes, error)
-		GetOrderByConsumerId(ctx context.Context, id string) (*model.OrderListRes, error)
+		GetOrderByConsumerId(ctx context.Context, id int64) (*model.OrderListRes, error)
 	}
 )
 
