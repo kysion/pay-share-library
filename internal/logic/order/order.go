@@ -275,14 +275,14 @@ func (s *sOrder) UpdateOrderState(ctx context.Context, id int64, state int) (boo
 }
 
 // GetOrderByProductNumber 根据产品编号查询订单
-func (s *sOrder) GetOrderByProductNumber(ctx context.Context, number string) (*model.OrderRes, error) {
+func (s *sOrder) GetOrderByProductNumber(ctx context.Context, number string, unionMainId int64) (*model.OrderRes, error) {
 	user := sys_service.SysSession().Get(ctx).JwtClaimsUser
 
-	// 最新的一条订单记录，并且是已支付的
+	// 最新的一条订单记录
 	daoWhere := dao.Order.Ctx(ctx).Where(dao.Order.Columns().ProductNumber, number).OrderAsc(dao.Order.Columns().TradeAt).Limit(1)
 
 	if (user.Type & sys_enum.User.Type.Admin.Code()) != sys_enum.User.Type.Admin.Code() {
-		daoWhere = daoWhere.Where(do.Order{UnionMainId: user.UnionMainId}).WhereOr(do.Order{MerchantId: user.UnionMainId}) // 商户和应用的所属商家需要去看订单
+		daoWhere = daoWhere.Where(do.Order{UnionMainId: unionMainId}).WhereOr(do.Order{MerchantId: unionMainId}) // 商户和应用的所属商家需要去看订单
 	}
 
 	ret := model.OrderRes{}
