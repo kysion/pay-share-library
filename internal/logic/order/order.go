@@ -295,6 +295,22 @@ func (s *sOrder) GetOrderByProductNumber(ctx context.Context, number string, uni
 	return &ret, nil
 }
 
+// GetLatestOrderByProductNumber  根据产品编号查询最新的一条订单
+func (s *sOrder) GetLatestOrderByProductNumber(ctx context.Context, number string) (*model.OrderRes, error) {
+
+	// 最新的一条订单记录
+	daoWhere := dao.Order.Ctx(ctx).Where(dao.Order.Columns().ProductNumber, number).OrderAsc(dao.Order.Columns().TradeAt).Limit(1)
+
+	ret := model.OrderRes{}
+	err := daoWhere.Scan(&ret)
+
+	if err != nil {
+		return nil, sys_service.SysLogs().ErrorSimple(ctx, err, "根据产品编号查询最新的订单失败，请检查", dao.Order.Table())
+	}
+
+	return &ret, nil
+}
+
 // QueryOrderByProductNumber 根据产品编号查询订单|列表
 func (s *sOrder) QueryOrderByProductNumber(ctx context.Context, number string, info *base_model.SearchParams) (*model.OrderListRes, error) {
 	user := sys_service.SysSession().Get(ctx).JwtClaimsUser
