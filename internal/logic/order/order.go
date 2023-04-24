@@ -279,7 +279,7 @@ func (s *sOrder) GetOrderByProductNumber(ctx context.Context, number string, uni
 	user := sys_service.SysSession().Get(ctx).JwtClaimsUser
 
 	// 最新的一条订单记录
-	daoWhere := dao.Order.Ctx(ctx).Where(dao.Order.Columns().ProductNumber, number).OrderAsc(dao.Order.Columns().TradeAt).Limit(1)
+	daoWhere := dao.Order.Ctx(ctx).Where(dao.Order.Columns().ProductNumber, number).OrderDesc(dao.Order.Columns().TradeAt).Limit(1)
 
 	if (user.Type & sys_enum.User.Type.Admin.Code()) != sys_enum.User.Type.Admin.Code() {
 		daoWhere = daoWhere.Where(do.Order{UnionMainId: unionMainId}).WhereOr(do.Order{MerchantId: unionMainId}) // 商户和应用的所属商家需要去看订单
@@ -299,7 +299,7 @@ func (s *sOrder) GetOrderByProductNumber(ctx context.Context, number string, uni
 func (s *sOrder) GetLatestOrderByProductNumber(ctx context.Context, number string) (*model.OrderRes, error) {
 
 	// 最新的一条订单记录
-	daoWhere := dao.Order.Ctx(ctx).Where(dao.Order.Columns().ProductNumber, number).OrderAsc(dao.Order.Columns().TradeAt).Limit(1)
+	daoWhere := dao.Order.Ctx(ctx).Where(dao.Order.Columns().ProductNumber, number).OrderDesc(dao.Order.Columns().TradeAt).Limit(1)
 
 	ret := model.OrderRes{}
 	err := daoWhere.Scan(&ret)
