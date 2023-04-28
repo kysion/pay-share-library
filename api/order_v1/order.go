@@ -50,7 +50,7 @@ type QueryOrderByProductNumberReq struct {
 
 type QueryOrderByUnionMainIdReq struct {
 	g.Meta      `path:"/queryOrderByUnionMainId" method:"post" summary:"根据主体查询订单|列表" tags:"订单"`
-	UnionMainId int64 `json:"union_main_id"              description:"主体ID，一般是app应用关联的主体" v:"required#主体id不能为空"`
+	UnionMainId int64 `json:"unionMainId"              description:"主体ID，一般是app应用关联的主体" v:"required#主体id不能为空"`
 	base_model.SearchParams
 }
 
