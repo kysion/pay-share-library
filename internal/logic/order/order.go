@@ -59,14 +59,17 @@ func (s *sOrder) CreateOrder(ctx context.Context, info *model.Order) (*model.Ord
 	if info.CouponConfig == "" {
 		data.CouponConfig = nil
 	}
-	if info.TradeScene == "" {
-		data.TradeScene = nil
-	}
 	if info.TradeSource == "" {
 		data.TradeSource = nil
 	}
+	if info.SubAccountScheme == "" {
+		data.SubAccountScheme = nil
+	}
+	if info.PayParams == "" {
+		data.PayParams = nil
+	}
 
-	data.TradeAt = gtime.Now()
+	//data.TradeAt = gtime.Now()
 
 	affected, err := daoctl.InsertWithError(dao.Order.Ctx(ctx), data)
 
@@ -220,16 +223,21 @@ func (s *sOrder) AuditOrderRefund(ctx context.Context, info *model.AuditOrder) (
 }
 
 // UpdateOrderTradeSource 修改订单支付元数据
-func (s *sOrder) UpdateOrderTradeSource(ctx context.Context, info *model.UpdateOrderTradeInfo) (bool, error) {
+func (s *sOrder) UpdateOrderTradeSource(ctx context.Context, orderId int64, info *model.UpdateOrderTradeInfo) (bool, error) {
 	// 先判断是否存在
-	videoInfo, err := s.GetOrderById(ctx, info.Id)
+	videoInfo, err := s.GetOrderById(ctx, orderId)
 	if err != nil || videoInfo == nil {
 		return false, sys_service.SysLogs().ErrorSimple(ctx, err, "订单不存在", dao.Order.Table())
 	}
 
 	data := kconv.Struct(info, &do.Order{})
 
-	affected, err := daoctl.UpdateWithError(dao.Order.Ctx(ctx).Data(data).OmitEmptyData().Where(do.Order{Id: info.Id}))
+	//data.TradeAt = gtime.Now()
+	if info.PayParams == nil {
+		data.PayParams = nil
+	}
+
+	affected, err := daoctl.UpdateWithError(dao.Order.Ctx(ctx).Data(data).OmitNilData().Where(do.Order{Id: orderId}))
 
 	if err != nil {
 		return false, sys_service.SysLogs().ErrorSimple(ctx, err, "订单信息更新失败", dao.Order.Table())
@@ -250,8 +258,9 @@ func (s *sOrder) UpdateOrderState(ctx context.Context, id int64, state int) (boo
 		State: state,
 	}
 
-	// 如果是已支付，支付时间修改为现在
-	if state == enum.Order.StateType.Paymented.Code() {
+	// 如果是已支付，交易时间修改为现在
+	if (state&enum.Order.StateType.Paymented.Code()) == enum.Order.StateType.Paymented.Code() ||
+		(state&enum.Order.StateType.PaymentComplete.Code()) == enum.Order.StateType.PaymentComplete.Code() {
 		info.TradeAt = gtime.Now()
 	}
 
@@ -279,7 +288,7 @@ func (s *sOrder) GetOrderByProductNumber(ctx context.Context, number string, uni
 	user := sys_service.SysSession().Get(ctx).JwtClaimsUser
 
 	// 最新的一条订单记录
-	daoWhere := dao.Order.Ctx(ctx).Where(dao.Order.Columns().ProductNumber, number).OrderDesc(dao.Order.Columns().TradeAt).Limit(1)
+	daoWhere := dao.Order.Ctx(ctx).Where(dao.Order.Columns().ProductNumber, number).OrderDesc(dao.Order.Columns().CreatedAt).Limit(1)
 
 	if (user.Type & sys_enum.User.Type.Admin.Code()) != sys_enum.User.Type.Admin.Code() {
 		daoWhere = daoWhere.Where(do.Order{UnionMainId: unionMainId}).WhereOr(do.Order{MerchantId: unionMainId}) // 商户和应用的所属商家需要去看订单
@@ -298,8 +307,8 @@ func (s *sOrder) GetOrderByProductNumber(ctx context.Context, number string, uni
 // GetLatestOrderByProductNumber  根据产品编号查询最新的一条订单
 func (s *sOrder) GetLatestOrderByProductNumber(ctx context.Context, number string) (*model.OrderRes, error) {
 
-	// 最新的一条订单记录
-	daoWhere := dao.Order.Ctx(ctx).Where(dao.Order.Columns().ProductNumber, number).OrderDesc(dao.Order.Columns().TradeAt).Limit(1)
+	// 最新的一条订单记录 TODO 这里有缓存
+	daoWhere := dao.Order.Ctx(ctx).Where(dao.Order.Columns().ProductNumber, number).OrderDesc(dao.Order.Columns().CreatedAt).Limit(1)
 
 	ret := model.OrderRes{}
 	err := daoWhere.Scan(&ret)
