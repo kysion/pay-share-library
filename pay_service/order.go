@@ -24,7 +24,7 @@ type (
 		QueryOrderByOneMonth(ctx context.Context, info *base_model.SearchParams) (*model.OrderListRes, error)
 		QueryOrderByTwoMonth(ctx context.Context, info *base_model.SearchParams) (*model.OrderListRes, error)
 		AuditOrderRefund(ctx context.Context, info *model.AuditOrder) (bool, error)
-		UpdateOrderTradeSource(ctx context.Context, info *model.UpdateOrderTradeInfo) (bool, error)
+		UpdateOrderTradeSource(ctx context.Context, orderId int64, info *model.UpdateOrderTradeInfo) (bool, error)
 		UpdateOrderState(ctx context.Context, id int64, state int) (bool, error)
 		GetOrderByProductNumber(ctx context.Context, number string, unionMainId int64) (*model.OrderRes, error)
 		GetLatestOrderByProductNumber(ctx context.Context, number string) (*model.OrderRes, error)

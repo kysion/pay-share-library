@@ -7,7 +7,7 @@ import (
 
 type Order struct {
 	Id               int64       `json:"id"              dc:"id"`
-	PlatformOrderId  string      `json:"platformOrderId" dc:"第三方平台交易id，例如支付宝、微信..."`
+	PlatformOrderId  string      `json:"platformOrderId"  description:"第三方平台的交易订单id，例如支付宝、微信..."`
 	ConsumerId       int64       `json:"consumerId"      dc:"消费者id"`
 	InOutType        int         `json:"inOutType"       dc:"收支类型：1收入，2支出" v:"required#收支类型不能为空"`
 	Amount           int         `json:"amount"          dc:"交易金额，也就是实际成交金额" `
@@ -31,6 +31,7 @@ type Order struct {
 	AppId            string      `json:"appId"            dc:"应用appId"`
 	UnionMainType    int         `json:"unionMainType"    dc:"应用关联主体类型, 也就是userType的类型"`
 	MerchantId       int64       `json:"merchantId"       dc:"商家id"`
+	PayParams        string      `json:"payParams"        description:"支付所需参数"`
 }
 
 type CreateOrder struct {
@@ -50,11 +51,11 @@ type AuditOrder struct {
 }
 
 type UpdateOrderTradeInfo struct {
-	Id int64 `json:"id"              dc:"id"`
+	PlatformOrderId *string `json:"platformOrderId" dc:"第三方平台交易id，例如支付宝、微信..."`
 
-	PlatformOrderId string `json:"platformOrderId" dc:"第三方平台交易id，例如支付宝、微信..."`
+	TradeSource *string `json:"tradeSource"     dc:"交易元数据"`
 
-	TradeSource string `json:"tradeSource"     dc:"交易元数据"`
+	PayParams *string `json:"payParams" dc:"支付参数，微信支付一般需要支付参数"`
 }
 
 type OrderRes Order

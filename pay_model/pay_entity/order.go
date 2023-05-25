@@ -11,7 +11,7 @@ import (
 // Order is the golang structure for table order.
 type Order struct {
 	Id               int64       `json:"id"               description:"id"`
-	PlatformOrderId  string      `json:"platformOrderId"  description:"第三方平台交易id，例如支付宝、微信..."`
+	PlatformOrderId  string      `json:"platformOrderId"  description:"第三方平台的交易订单id，例如支付宝、微信..."`
 	ConsumerId       int64       `json:"consumerId"       description:"消费者id"`
 	InOutType        int         `json:"inOutType"        description:"收支类型：1收入，2支出"`
 	Amount           int         `json:"amount"           description:"交易金额，也就是实际成交金额"`
@@ -35,4 +35,5 @@ type Order struct {
 	AppId            string      `json:"appId"            description:"应用appId"`
 	UnionMainType    int         `json:"unionMainType"    description:"应用关联主体类型, 也就是userType的类型"`
 	MerchantId       int64       `json:"merchantId"       description:"商家id"`
+	PayParams        string      `json:"payParams"        description:"支付所需参数"`
 }
