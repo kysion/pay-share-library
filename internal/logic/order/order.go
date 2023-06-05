@@ -371,11 +371,10 @@ func (s *sOrder) GetOrderByConsumerId(ctx context.Context, id int64, info *base_
 
 // 查询订单
 func (s *sOrder) getOrderByAnyId(ctx context.Context, id int64, columnName string, info *base_model.SearchParams) (*model.OrderListRes, error) {
+	// 两个月内的
 	now := gtime.Now()
-
 	t := now.Add(0 - time.Hour*24*60)
 
-	// 两个月内的
 	data, err := daoctl.Query[model.Order](dao.Order.Ctx(ctx).Where(columnName, id).WhereGT(dao.Order.Columns().CreatedAt, t), info, false)
 
 	if err != nil {
@@ -383,4 +382,24 @@ func (s *sOrder) getOrderByAnyId(ctx context.Context, id int64, columnName strin
 	}
 
 	return (*model.OrderListRes)(data), nil
+}
+
+// HasInUserOrder 根据设备ID判断是够存在正在使用的订单
+func (s *sOrder) HasInUserOrder(ctx context.Context, deviceNumber string) (bool, error) {
+	now := gtime.Now()
+
+	t := now.Add(0 - time.Minute*3) // 3分钟之前
+
+	result, err := daoctl.Query[model.Order](dao.Order.Ctx(ctx).Where(do.Order{ProductNumber: deviceNumber}).OrderDesc(dao.Order.Columns().CreatedAt).Limit(1), nil, false)
+
+	if err != nil {
+		return false, err
+	}
+
+	// 三分钟之内的订单,
+	if result.Records[0].CreatedAt.After(t) {
+		return true, nil
+	}
+
+	return false, err
 }
