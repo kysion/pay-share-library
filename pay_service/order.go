@@ -31,6 +31,7 @@ type (
 		QueryOrderByProductNumber(ctx context.Context, number string, info *base_model.SearchParams) (*model.OrderListRes, error)
 		GetOrderByUnionMainId(ctx context.Context, id int64, info *base_model.SearchParams) (*model.OrderListRes, error)
 		GetOrderByConsumerId(ctx context.Context, id int64, info *base_model.SearchParams) (*model.OrderListRes, error)
+		HasInUserOrder(ctx context.Context, deviceNumber string) (bool, error)
 	}
 )
 
