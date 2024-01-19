@@ -14,8 +14,8 @@ gfcli:
   gen:
     dao:
       - link: "pgsql:user=kuaimk password=Kuaimk23db host=192.168.1.105 port=5432 dbname=kuaimk_test sslmode=disable"
-        tables: "kmk_order, "
-        removePrefix: "kmk_, co_"
+        tables: "pay_order,"
+        removePrefix: "kmk_, co_, pay_"
         descriptionTag:  true
         noModelComment:  true
         withTime: false
