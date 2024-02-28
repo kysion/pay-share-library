@@ -3,6 +3,7 @@ package order
 import (
 	"context"
 	"github.com/SupenBysz/gf-admin-community/api_v1"
+	"github.com/SupenBysz/gf-admin-community/sys_service"
 	"github.com/kysion/pay-share-library/api/order_v1"
 	model "github.com/kysion/pay-share-library/pay_model"
 	service "github.com/kysion/pay-share-library/pay_service"
@@ -55,7 +56,9 @@ func (c *cOrder) UpdateOrderState(ctx context.Context, req *order_v1.UpdateOrder
 }
 
 func (c *cOrder) QueryOrderByProductNumber(ctx context.Context, req *order_v1.QueryOrderByProductNumberReq) (*model.OrderListRes, error) {
-	ret, err := service.Order().QueryOrderByProductNumber(ctx, req.Number, &req.SearchParams)
+	user := sys_service.SysSession().Get(ctx).JwtClaimsUser
+
+	ret, err := service.Order().QueryOrderByProductNumber(ctx, req.Number, &req.SearchParams, user.UnionMainId, 0)
 
 	return ret, err
 }
