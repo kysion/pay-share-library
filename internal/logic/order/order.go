@@ -321,18 +321,24 @@ func (s *sOrder) GetLatestOrderByProductNumber(ctx context.Context, number strin
 }
 
 // QueryOrderByProductNumber 根据产品编号查询订单|列表
-func (s *sOrder) QueryOrderByProductNumber(ctx context.Context, number string, info *base_model.SearchParams) (*model.OrderListRes, error) {
-	user := sys_service.SysSession().Get(ctx).JwtClaimsUser
+func (s *sOrder) QueryOrderByProductNumber(ctx context.Context, number string, info *base_model.SearchParams, unionMainId int64, merchantId int64) (*model.OrderListRes, error) {
+	//user := sys_service.SysSession().Get(ctx).JwtClaimsUser
 
 	daoWhere := dao.Order.Ctx(ctx).Where(dao.Order.Columns().ProductNumber, number)
-
-	if (user.Type&sys_enum.User.Type.Admin.Code()) != sys_enum.User.Type.Admin.Code() && user.Type != 4 {
-		daoWhere = daoWhere.Where(do.Order{UnionMainId: user.UnionMainId}) // 商户和应用的所属商家需要去看订单
+	if unionMainId != 0 {
+		daoWhere = daoWhere.Where(do.Order{UnionMainId: unionMainId}) // 商户和应用的所属商家需要去看订单
+	}
+	if merchantId != 0 {
+		daoWhere = daoWhere.Where(do.Order{MerchantId: merchantId}) // 商户和应用的所属商家需要去看订单
 	}
 
-	if user.Type == 4 {
-		daoWhere = daoWhere.Where(do.Order{MerchantId: user.UnionMainId}) // 商户和应用的所属商家需要去看订单
-	}
+	//if (user.Type&sys_enum.User.Type.Admin.Code()) != sys_enum.User.Type.Admin.Code() && user.Type != 4 {
+	//	daoWhere = daoWhere.Where(do.Order{UnionMainId: user.UnionMainId}) // 商户和应用的所属商家需要去看订单
+	//}
+	//
+	//if user.Type == 4 {
+	//	daoWhere = daoWhere.Where(do.Order{MerchantId: user.UnionMainId}) // 商户和应用的所属商家需要去看订单
+	//}
 
 	data, err := daoctl.Query[model.Order](daoWhere, info, false)
 
