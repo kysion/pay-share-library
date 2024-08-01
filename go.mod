@@ -6,7 +6,6 @@ require (
 	github.com/SupenBysz/gf-admin-community v0.7.15
 	github.com/gogf/gf/v2 v2.6.1
 	github.com/kysion/base-library v0.0.36
-	github.com/yitter/idgenerator-go v1.3.3
 )
 
 require (
@@ -63,6 +62,7 @@ require (
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm v1.0.834 // indirect
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/faceid v1.0.972 // indirect
 	github.com/tjfoc/gmsm v1.4.1 // indirect
+	github.com/yitter/idgenerator-go v1.3.3 // indirect
 	go.opentelemetry.io/otel v1.21.0 // indirect
 	go.opentelemetry.io/otel/metric v1.21.0 // indirect
 	go.opentelemetry.io/otel/sdk v1.21.0 // indirect
