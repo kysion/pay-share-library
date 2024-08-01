@@ -15,10 +15,10 @@ import (
 	dao "github.com/kysion/pay-share-library/pay_model/pay_dao"
 	do "github.com/kysion/pay-share-library/pay_model/pay_do"
 
+	"github.com/SupenBysz/gf-admin-community/utility/idgen"
 	enum "github.com/kysion/pay-share-library/pay_model/pay_enum"
 	hook "github.com/kysion/pay-share-library/pay_model/pay_hook"
 	"github.com/kysion/pay-share-library/pay_service"
-	"github.com/yitter/idgenerator-go/idgen"
 
 	"time"
 )
