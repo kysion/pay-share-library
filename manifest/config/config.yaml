@@ -37,6 +37,14 @@ service:
   # 是否是Redis缓存
   IsRedisCache: false
 
+# 微信配置
+weixin:
+  # 微信消息验证Token，需要和微信开放平台设置的Token一致
+  msgVerfiyToken: "xxxx"
+  # 服务器域名
+  serverDomain: "https://www.domain.com"
+
+
 # 日志配置
 logger:
   path: "temp/logs/default"
