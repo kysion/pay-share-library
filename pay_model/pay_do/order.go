@@ -9,11 +9,11 @@ import (
 	"github.com/gogf/gf/v2/os/gtime"
 )
 
-// Order is the golang structure of table kmk_order for DAO operations like Where/Data.
+// Order is the golang structure of table pay_order for DAO operations like Where/Data.
 type Order struct {
-	g.Meta           `orm:"table:kmk_order, do:true"`
+	g.Meta           `orm:"table:pay_order, do:true"`
 	Id               interface{} // id
-	PlatformOrderId  interface{} // 第三方平台交易id，例如支付宝、微信...
+	PlatformOrderId  interface{} // 第三方平台的交易订单id，例如支付宝、微信...
 	ConsumerId       interface{} // 消费者id
 	InOutType        interface{} // 收支类型：1收入，2支出
 	Amount           interface{} // 交易金额，也就是实际成交金额
@@ -37,4 +37,5 @@ type Order struct {
 	AppId            interface{} // 应用appId
 	UnionMainType    interface{} // 应用关联主体类型, 也就是userType的类型
 	MerchantId       interface{} // 商家id
+	PayParams        interface{} // 支付所需参数
 }

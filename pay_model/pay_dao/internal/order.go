@@ -14,17 +14,17 @@ import (
 	"github.com/gogf/gf/v2/frame/g"
 )
 
-// OrderDao is the data access object for table kmk_order.
+// OrderDao is the data access object for table pay_order.
 type OrderDao struct {
 	table   string       // table is the underlying table name of the DAO.
 	group   string       // group is the database configuration group name of current DAO.
 	columns OrderColumns // columns contains all the column names of Table for convenient usage.
 }
 
-// OrderColumns defines and stores column names for table kmk_order.
+// OrderColumns defines and stores column names for table pay_order.
 type OrderColumns struct {
 	Id               string // id
-	PlatformOrderId  string // 第三方平台交易id，例如支付宝、微信...
+	PlatformOrderId  string // 第三方平台的交易订单id，例如支付宝、微信...
 	ConsumerId       string // 消费者id
 	InOutType        string // 收支类型：1收入，2支出
 	Amount           string // 交易金额，也就是实际成交金额
@@ -48,9 +48,10 @@ type OrderColumns struct {
 	AppId            string // 应用appId
 	UnionMainType    string // 应用关联主体类型, 也就是userType的类型
 	MerchantId       string // 商家id
+	PayParams        string // 支付所需参数
 }
 
-// orderColumns holds the columns for table kmk_order.
+// orderColumns holds the columns for table pay_order.
 var orderColumns = OrderColumns{
 	Id:               "id",
 	PlatformOrderId:  "platform_order_id",
@@ -77,6 +78,7 @@ var orderColumns = OrderColumns{
 	AppId:            "app_id",
 	UnionMainType:    "union_main_type",
 	MerchantId:       "merchant_id",
+	PayParams:        "pay_params",
 }
 
 // NewOrderDao creates and returns a new DAO object for table data access.
@@ -93,7 +95,7 @@ func NewOrderDao(proxy ...dao_interface.IDao) *OrderDao {
 
 	return &OrderDao{
 		group:   "default",
-		table:   "kmk_order",
+		table:   "pay_order",
 		columns: orderColumns,
 	}
 }
