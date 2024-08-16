@@ -10,30 +10,29 @@ import (
 
 // Order is the golang structure for table order.
 type Order struct {
-	Id               int64       `json:"id"               description:"id"`
-	PlatformOrderId  string      `json:"platformOrderId"  description:"第三方平台的交易订单id，例如支付宝、微信..."`
-	ConsumerId       int64       `json:"consumerId"       description:"消费者id"`
-	InOutType        int         `json:"inOutType"        description:"收支类型：1收入，2支出"`
-	Amount           int         `json:"amount"           description:"交易金额，也就是实际成交金额"`
-	CouponAmount     int         `json:"couponAmount"     description:"优惠减免金额"`
-	CouponConfig     string      `json:"couponConfig"     description:"优惠配置详细数据"`
-	OrderAmount      int         `json:"orderAmount"      description:"订单金额，也就是优惠前的金额"`
-	ProductName      string      `json:"productName"      description:"产品名称，例如充电等"`
-	TradeScene       string      `json:"tradeScene"       description:"交易场景"`
-	CreatedAt        *gtime.Time `json:"createdAt"        description:"订单创建时间"`
-	RefundAmount     int         `json:"refundAmount"     description:"退款金额"`
-	TradeAt          *gtime.Time `json:"tradeAt"          description:"交易时间"`
-	State            int         `json:"state"            description:"订单状态：1待支付、2支付中、4已支付、8取消支付、16交易完成、32退款中、64已退款、128支付超时、256已关闭"`
-	AuditState       int         `json:"auditState"       description:"审核状态：0待审核、1已通过、-1不通过"`
-	AuditReplyMsg    string      `json:"auditReplyMsg"    description:"审核回复，审核状态为不通过时必须要有审核回复"`
-	AuditAt          *gtime.Time `json:"auditAt"          description:"审核时间"`
-	TradeSourceType  int         `json:"tradeSourceType"  description:"交易源类型：1支付宝、2微信、4抖音、8银联"`
-	TradeSource      string      `json:"tradeSource"      description:"交易元数据"`
-	ProductNumber    string      `json:"productNumber"    description:"产品编号"`
-	UnionMainId      int64       `json:"unionMainId"      description:"应用关联主体ID"`
-	SubAccountScheme string      `json:"subAccountScheme" description:"分账方案，默认空，空代表分账结束，无需分账"`
-	AppId            string      `json:"appId"            description:"应用appId"`
-	UnionMainType    int         `json:"unionMainType"    description:"应用关联主体类型, 也就是userType的类型"`
-	MerchantId       int64       `json:"merchantId"       description:"商家id"`
-	PayParams        string      `json:"payParams"        description:"支付所需参数"`
+	Id               int64       `json:"id"               orm:"id"                 description:"id"`
+	PlatformOrderId  string      `json:"platformOrderId"  orm:"platform_order_id"  description:"第三方平台的交易订单id，例如支付宝、微信..."`
+	ConsumerId       int64       `json:"consumerId"       orm:"consumer_id"        description:"消费者id"`
+	InOutType        int         `json:"inOutType"        orm:"in_out_type"        description:"收支类型：1收入，2支出"`
+	Amount           int         `json:"amount"           orm:"amount"             description:"交易金额，也就是实际成交金额"`
+	CouponAmount     int         `json:"couponAmount"     orm:"coupon_amount"      description:"优惠减免金额"`
+	CouponConfig     string      `json:"couponConfig"     orm:"coupon_config"      description:"优惠配置详细数据"`
+	OrderAmount      int         `json:"orderAmount"      orm:"order_amount"       description:"订单金额，也就是优惠前的金额"`
+	ProductName      string      `json:"productName"      orm:"product_name"       description:"产品名称，例如充电等"`
+	TradeScene       string      `json:"tradeScene"       orm:"trade_scene"        description:"交易场景"`
+	CreatedAt        *gtime.Time `json:"createdAt"        orm:"created_at"         description:"订单创建时间"`
+	TradeAt          *gtime.Time `json:"tradeAt"          orm:"trade_at"           description:"交易时间"`
+	State            int         `json:"state"            orm:"state"              description:"订单状态：1待支付、2支付中、4已支付、8取消支付、16交易完成、32退款中、64已退款、128支付超时、256已关闭"`
+	AuditState       int         `json:"auditState"       orm:"audit_state"        description:"审核状态：0待审核、1已通过、-1不通过"`
+	AuditReplyMsg    string      `json:"auditReplyMsg"    orm:"audit_reply_msg"    description:"审核回复，审核状态为不通过时必须要有审核回复"`
+	AuditAt          *gtime.Time `json:"auditAt"          orm:"audit_at"           description:"审核时间"`
+	TradeSourceType  int         `json:"tradeSourceType"  orm:"trade_source_type"  description:"交易源类型：1支付宝、2微信、4抖音、8银联"`
+	TradeSource      string      `json:"tradeSource"      orm:"trade_source"       description:"交易元数据"`
+	ProductNumber    string      `json:"productNumber"    orm:"product_number"     description:"产品编号"`
+	UnionMainId      int64       `json:"unionMainId"      orm:"union_main_id"      description:"应用关联主体ID"`
+	SubAccountScheme string      `json:"subAccountScheme" orm:"sub_account_scheme" description:"分账方案，默认空，空代表分账结束，无需分账"`
+	AppId            string      `json:"appId"            orm:"app_id"             description:"应用appId"`
+	UnionMainType    int         `json:"unionMainType"    orm:"union_main_type"    description:"应用关联主体类型, 也就是userType的类型"`
+	MerchantId       int64       `json:"merchantId"       orm:"merchant_id"        description:"商家id"`
+	PayParams        string      `json:"payParams"        orm:"pay_params"         description:"支付所需参数"`
 }
