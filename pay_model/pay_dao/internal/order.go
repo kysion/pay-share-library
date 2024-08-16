@@ -16,9 +16,13 @@ import (
 
 // OrderDao is the data access object for table pay_order.
 type OrderDao struct {
-	table   string       // table is the underlying table name of the DAO.
-	group   string       // group is the database configuration group name of current DAO.
-	columns OrderColumns // columns contains all the column names of Table for convenient usage.
+	dao_interface.IDao
+	table       string       // table is the underlying table name of the DAO.
+	group       string       // group is the database configuration group name of current DAO.
+	columns     OrderColumns // columns contains all the column names of Table for convenient usage.
+	daoConfig   *dao_interface.DaoConfig
+	ignoreCache bool
+	exWhereArr  []string
 }
 
 // OrderColumns defines and stores column names for table pay_order.
@@ -34,7 +38,6 @@ type OrderColumns struct {
 	ProductName      string // 产品名称，例如充电等
 	TradeScene       string // 交易场景
 	CreatedAt        string // 订单创建时间
-	RefundAmount     string // 退款金额
 	TradeAt          string // 交易时间
 	State            string // 订单状态：1待支付、2支付中、4已支付、8取消支付、16交易完成、32退款中、64已退款、128支付超时、256已关闭
 	AuditState       string // 审核状态：0待审核、1已通过、-1不通过
@@ -64,7 +67,6 @@ var orderColumns = OrderColumns{
 	ProductName:      "product_name",
 	TradeScene:       "trade_scene",
 	CreatedAt:        "created_at",
-	RefundAmount:     "refund_amount",
 	TradeAt:          "trade_at",
 	State:            "state",
 	AuditState:       "audit_state",
@@ -86,10 +88,15 @@ func NewOrderDao(proxy ...dao_interface.IDao) *OrderDao {
 	var dao *OrderDao
 	if len(proxy) > 0 {
 		dao = &OrderDao{
-			group:   proxy[0].Group(),
-			table:   proxy[0].Table(),
-			columns: orderColumns,
+			group:       proxy[0].Group(),
+			table:       proxy[0].Table(),
+			columns:     orderColumns,
+			daoConfig:   proxy[0].DaoConfig(context.Background()),
+			IDao:        proxy[0].DaoConfig(context.Background()).Dao,
+			ignoreCache: proxy[0].DaoConfig(context.Background()).IsIgnoreCache(),
+			exWhereArr:  proxy[0].DaoConfig(context.Background()).Dao.GetExtWhereKeys(),
 		}
+
 		return dao
 	}
 
@@ -125,28 +132,25 @@ func (dao *OrderDao) Ctx(ctx context.Context, cacheOption ...*gdb.CacheOption) *
 	return dao.DaoConfig(ctx, cacheOption...).Model
 }
 
-func (dao *OrderDao) DaoConfig(ctx context.Context, cacheOption ...*gdb.CacheOption) dao_interface.DaoConfig {
-	daoConfig := dao_interface.DaoConfig{
-		Dao:   dao,
-		DB:    dao.DB(),
-		Table: dao.table,
-		Group: dao.group,
-		Model: dao.DB().Model(dao.Table()).Safe().Ctx(ctx),
+func (dao *OrderDao) DaoConfig(ctx context.Context, cacheOption ...*gdb.CacheOption) *dao_interface.DaoConfig {
+	//if dao.daoConfig != nil && len(dao.exWhereArr) == 0 {
+	//	return dao.daoConfig
+	//}
+
+	var daoConfig = daoctl.NewDaoConfig(ctx, dao, cacheOption...)
+	dao.daoConfig = &daoConfig
+
+	if len(dao.exWhereArr) > 0 {
+		daoConfig.IgnoreExtModel(dao.exWhereArr...)
+		dao.exWhereArr = []string{}
+
 	}
 
-	if len(cacheOption) == 0 {
-		daoConfig.CacheOption = daoctl.MakeDaoCache(dao.Table())
-		daoConfig.Model = daoConfig.Model.Cache(*daoConfig.CacheOption)
-	} else {
-		if cacheOption[0] != nil {
-			daoConfig.CacheOption = cacheOption[0]
-			daoConfig.Model = daoConfig.Model.Cache(*daoConfig.CacheOption)
-		}
+	if dao.ignoreCache {
+		daoConfig.IgnoreCache()
 	}
 
-	daoConfig.Model = daoctl.RegisterDaoHook(daoConfig.Model)
-
-	return daoConfig
+	return dao.daoConfig
 }
 
 // Transaction wraps the transaction logic using function f.
@@ -157,4 +161,21 @@ func (dao *OrderDao) DaoConfig(ctx context.Context, cacheOption ...*gdb.CacheOpt
 // as it is automatically handled by this function.
 func (dao *OrderDao) Transaction(ctx context.Context, f func(ctx context.Context, tx gdb.TX) error) (err error) {
 	return dao.Ctx(ctx).Transaction(ctx, f)
+}
+
+func (dao *OrderDao) GetExtWhereKeys() []string {
+	return dao.exWhereArr
+}
+
+func (dao *OrderDao) IsIgnoreCache() bool {
+	return dao.ignoreCache
+}
+
+func (dao *OrderDao) IgnoreCache() dao_interface.IDao {
+	dao.ignoreCache = true
+	return dao
+}
+func (dao *OrderDao) IgnoreExtModel(whereKey ...string) dao_interface.IDao {
+	dao.exWhereArr = append(dao.exWhereArr, whereKey...)
+	return dao
 }

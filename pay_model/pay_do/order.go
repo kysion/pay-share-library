@@ -23,7 +23,6 @@ type Order struct {
 	ProductName      interface{} // 产品名称，例如充电等
 	TradeScene       interface{} // 交易场景
 	CreatedAt        *gtime.Time // 订单创建时间
-	RefundAmount     interface{} // 退款金额
 	TradeAt          *gtime.Time // 交易时间
 	State            interface{} // 订单状态：1待支付、2支付中、4已支付、8取消支付、16交易完成、32退款中、64已退款、128支付超时、256已关闭
 	AuditState       interface{} // 审核状态：0待审核、1已通过、-1不通过
